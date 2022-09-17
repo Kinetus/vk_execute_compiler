@@ -1,4 +1,4 @@
-use fast_vk::Method;
+use vk_method::Method;
 
 pub struct ExecuteCompiler;
 
@@ -35,7 +35,7 @@ impl ExecuteCompiler {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use fast_vk::Params;
+    use vk_method::Params;
 
     #[test]
     fn compile() {
@@ -43,8 +43,8 @@ mod tests {
             Method::new(
                 "users.get",
                 Params::from([
-                    (String::from("user_id"), serde_json::to_value(1).unwrap()),
-                    (String::from("fields"), serde_json::to_value(["photo50", "verified"]).unwrap())
+                    ("user_id", 1.into()),
+                    ("fields", vec!["photo50", "verified"].into())
                 ])
             )
         ];
