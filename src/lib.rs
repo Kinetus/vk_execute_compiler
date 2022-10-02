@@ -3,12 +3,17 @@ use vk_method::Method;
 pub struct ExecuteCompiler;
 
 impl ExecuteCompiler {
-    pub fn compile(execute: Vec<Method>) -> String {
+    pub fn compile<Methods>(methods: Methods) -> String
+    where
+        Methods: IntoIterator<Item = Method>,
+        <Methods as IntoIterator>::IntoIter: ExactSizeIterator,
+    {
+        let methods = methods.into_iter();
+
         let mut code = String::new();
-    
-        let method_count = execute.len();
+        let method_count = methods.len();
         
-        for (index, method) in execute.into_iter().enumerate() {
+        for (index, method) in methods.enumerate() {
             code.push_str(
                 format!(
                     "var result{index} = API.{}({});",
@@ -20,11 +25,9 @@ impl ExecuteCompiler {
         }
     
         code.push_str("return [");
-    
         for i in 0..method_count {
             code.push_str(format!("result{i},").as_str());
         }
-    
         code.push_str("];");
     
         code
